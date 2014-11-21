@@ -3,7 +3,7 @@ require "chi_employees/employee"
 require 'unirest'
 
 module ChiEmployees
-  BASE_URL = "http://data.cityofchicago.org/resource/xzkq-xp2w.json"
+  BASE_URL = "http://data.cityofchicago.org/resource/xzkq-xp2w.json?"
 
   def self.all
     employee_hashes = Unirest.get(BASE_URL).body
@@ -12,7 +12,9 @@ module ChiEmployees
 
   def self.where(hash)
     url = BASE_URL
-    url += "?#{hash.keys.first}=#{hash.values.first}"
+    hash.each do |key, value|
+      url += "#{key}=#{value}&"
+    end
     employee_hashes = Unirest.get(url).body
     generate_employees(employee_hashes)
   end
